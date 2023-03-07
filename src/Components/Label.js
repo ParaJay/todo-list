@@ -15,14 +15,14 @@ const getRandom = () => {
 const Label = (props) => {
     const hidden = props.isHidden;
     
-    var labelClassName = "todo-label";
+    var labelClassName = "note-label";
 
     if(props.isChecked) labelClassName += " checked";
     if(props.isHidden) labelClassName += " hidden";
 
     if(!props.isExpanded) {
         return (
-            <div className={hidden ? "hidden" : "todo-wrapper"} onClick={props.onClick}>
+            <div className={hidden ? "hidden" : "note-wrapper"} onClick={props.onClick}>
                 <h3 className={labelClassName}>{props.title}</h3>
             </div>
         )
@@ -32,7 +32,7 @@ const Label = (props) => {
         let newText = text.split("\n").map(e => <p key={getRandom() + "-" + e} className={labelClassName}>{e}</p>);
 
         return (
-            <div className={hidden ? "hidden" : "todo-wrapper"}>
+            <div className={hidden ? "hidden" : "note-wrapper"}>
                 <div className="sub-wrapper" onClick={props.onClick}>
                     <h3 className={labelClassName}>{props.title}</h3>
                     {newText}

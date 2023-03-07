@@ -8,21 +8,21 @@ import NoteDialog from "./Components/NoteDialog";
 const App = () => {
     const [text, setText] = useState("");
     const [title, setTitle] = useState("");
-    const [todos, setTodos] = useState([]);
+    const [notes, setNotes] = useState([]);
     const [dialog, setDialogue] = useState(false);
 
     const onTitleChange = (e) => { setTitle(e.target.value); }
     const onTextChange = (e) => { setText(e.target.value); }
 
     const changeNote = (index, key, value, set=true) => {
-        let tds = [...todos];
+        let tds = [...notes];
         let toChange = tds[index];
 
         if(value == "invert") value = !toChange[key];
 
         tds[index][key] = value;
 
-        setTodos(tds);
+        setNotes(tds);
     }
 
     const promptNote = () => {
@@ -30,8 +30,8 @@ const App = () => {
     }
 
     const getIndex = (title) => {
-        for(let i = 0; i < todos.length; i++) {
-            if(todos[i].title === title) {
+        for(let i = 0; i < notes.length; i++) {
+            if(notes[i].title === title) {
                 return i;
             }
         }
@@ -40,7 +40,7 @@ const App = () => {
     }
 
     const clearInputs = () => {
-        let inputs = document.getElementsByClassName("todo-input");
+        let inputs = document.getElementsByClassName("note-input");
 
         for(let i = 0; i < inputs.length; i++) inputs[i].value = "";
     }
@@ -48,33 +48,25 @@ const App = () => {
     const addNote = (e) => {
         if(e) e.preventDefault();
 
-        console.log("adding note");
-        console.log(todos);
-
         if(noteExists(title)) {
             promptNote();
-            console.log("note exists");
             return;
         }
 
-        let t = [...todos];
+        let t = [...notes];
 
         clearInputs();
 
         t.push({text : text, title: title});
 
-        console.log("added component");
-
-        setTodos(t);
+        setNotes(t);
     }
 
     const removeNote = (index) => {
-        let tds = [...todos];
+        let tds = [...notes];
         tds.splice(index, 1);
 
-        console.log("removing note");
-
-        setTodos(tds);
+        setNotes(tds);
     }
 
     const checkNote = (index) => {
@@ -92,12 +84,12 @@ const App = () => {
 
     const overwriteNote = async () => {
         changeNote(getIndex(title), "text", text);
-        clearInputs();
+        setTimeout(() => clearInputs(), 0);
     }
 
     const mergeNote = () => {
         let index = getIndex(title);
-        let ttext = todos[index].text;
+        let ttext = notes[index].text;
 
         changeNote(index, "text", ttext + "\n" + text);
 
@@ -105,8 +97,8 @@ const App = () => {
     }
 
     const noteExists = (title) => {
-        for(let i = 0; i < todos.length; i++) {
-            if(todos[i].title === title) {
+        for(let i = 0; i < notes.length; i++) {
+            if(notes[i].title === title) {
                 return true;
             }
         }
@@ -114,12 +106,12 @@ const App = () => {
         return false;
     }
 
-    const getTodos = (tds) => {
+    const getNotes = (tds) => {
         if(!tds) return <></>
-        let todos = [];
+        let notes = [];
     
         for(let i = 0; i < tds.length; i++) {
-            todos.push(
+            notes.push(
             <Label
                 key={i}
                 title={tds[i].title}
@@ -135,18 +127,18 @@ const App = () => {
     
             </Label>);
     
-            todos.push(<Separator key={"sep-" + i}/>)
+        notes.push(<Separator key={"sep-" + i}/>)
         }
     
-        return <>{todos}</>;
+        return <>{notes}</>;
     }
 
     const showAll = () => {
-        let tds = [...todos];
+        let tds = [...notes];
 
         for(let i = 0; i < tds.length; i++) tds[i].hidden = false;
 
-        setTodos(tds);
+        setNotes(tds);
     }
 
     const ND = <NoteDialog open={dialog} closeCallback={
@@ -156,7 +148,7 @@ const App = () => {
     return (
         <> 
         {ND}
-            {getTodos(todos)}
+            {getNotes(notes)}
             <br/><br/><br/>
             <Form onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange}></Form>
             <br/><br/>

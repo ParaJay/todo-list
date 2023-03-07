@@ -6,7 +6,7 @@ const Input = (props) => {
 
     if(props.isTextArea) {
         return (
-            <textarea className="todo-input" 
+            <textarea className="note-input" 
                 placeholder={placeholder}
                 required={true} 
                 cols={56} 
@@ -16,7 +16,7 @@ const Input = (props) => {
             </textarea>
         );
     } else {
-        return (<input className="todo-input" required={true} onChange={onChange} placeholder={placeholder}></input>);
+        return (<input className="note-input" required={true} onChange={onChange} placeholder={placeholder}></input>);
     }
 }
 
