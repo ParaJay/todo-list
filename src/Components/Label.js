@@ -1,3 +1,17 @@
+const getRandom = () => {
+    const alpha = "abcdefghijklmnopqrstuvwxys";
+    const bet = alpha.slice().toUpperCase();
+
+    const alphabet = (alpha + bet).split("");
+    var res = "";
+
+    while(res.length < 8) {
+        res += alphabet[Math.floor(Math.random() * alphabet.length - 1)];
+    }
+
+    return res;
+}
+
 const Label = (props) => {
     const hidden = props.isHidden;
     
@@ -13,8 +27,9 @@ const Label = (props) => {
             </div>
         )
     } else {
+        let random = (Math.random() * Math.random()).toString().slice(0, 4);
         let text = props.text;
-        let newText = text.split("\n").map(e => <p key={e} className={labelClassName}>{e}</p>);
+        let newText = text.split("\n").map(e => <p key={getRandom() + "-" + e} className={labelClassName}>{e}</p>);
 
         return (
             <div className={hidden ? "hidden" : "todo-wrapper"}>
