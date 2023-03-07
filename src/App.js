@@ -12,6 +12,17 @@ const App = () => {
     const onTitleChange = (e) => { setTitle(e.target.value); }
     const onTextChange = (e) => { setText(e.target.value); }
 
+    const changeNote = (index, key, value, set=true) => {
+        let tds = [...todos];
+        let toChange = tds[index];
+
+        if(value == "invert") value = !toChange[key];
+
+        tds[index][key] = value;
+
+        setTodos(tds);
+    }
+
     const addNote = (e) => {
         e.preventDefault();
 
@@ -33,26 +44,16 @@ const App = () => {
     }
 
     const checkNote = (index) => {
-        let tds = [...todos];
+        changeNote(index, "checked", "invert");
+    }
 
-        let toChange = tds[index];
-
-        toChange.checked = !toChange.checked;
-
-        tds[index] = toChange;
-
-        setTodos(tds);
+    const expandNote = (index) => {
+        changeNote(index, "expanded", "invert");
     }
 
     const hideNote = (index) => {
-        let tds = [...todos];
-        let label = tds[index];
-
-        label.hidden = true;
-
-        tds[index] = label;
-
-        setTodos(tds);
+        changeNote(index, "hidden", true);
+        changeNote(index, "expanded", false);
     }
 
     const getTodos = (tds) => {
@@ -70,6 +71,8 @@ const App = () => {
                 onCheck={() => checkNote(i)}
                 onRemove={() => removeNote(i)}
                 onHide={() => hideNote(i)}
+                onClick={() => expandNote(i)}
+                isExpanded={tds[i].expanded}
                 >
     
             </Label>);
@@ -84,10 +87,7 @@ const App = () => {
         let tds = [...todos];
 
         for(let i = 0; i < tds.length; i++) {
-            let t = tds[i];
-
-            t.hidden = false;
-            tds[i] = t;
+            tds[i].hidden = false;
         }
 
         setTodos(tds);
