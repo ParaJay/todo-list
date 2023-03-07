@@ -1,0 +1,41 @@
+.left-item {
+    margin-right: auto;
+}
+
+.todo-label {
+    text-align: center;
+}
+
+.centered-item {
+    margin-left: auto;
+    text-align: center;
+}
+
+.right-item {
+    margin-left: auto;
+}
+
+.wrapper {
+    display: flex;
+}
+
+.todo-wrapper {
+    border: solid 2px;
+}
+
+.separator {
+    margin: 1px;
+}
+
+.checked {
+    text-decoration: line-through;
+}
+
+textarea {
+    resize: none;
+}
+
+.hidden {
+    display: none;
+    /* visibility: hidden */
+}
