@@ -26,33 +26,33 @@ const App = () => {
     }
 
     const removeNote = (index) => {
-        let t = todos.slice();
-        t.splice(index, 1);
+        let tds = [...todos];
+        tds.splice(index, 1);
 
-        setTodos(t);
+        setTodos(tds);
     }
 
     const checkNote = (index) => {
-        let t = todos.slice();
+        let tds = [...todos];
 
-        let toChange = t[index];
+        let toChange = tds[index];
 
         toChange.checked = !toChange.checked;
 
-        t[index] = toChange;
+        tds[index] = toChange;
 
-        setTodos(t);
+        setTodos(tds);
     }
 
     const hideNote = (index) => {
-        let label = todos[index];
-        let t = todos.slice();
+        let tds = [...todos];
+        let label = tds[index];
 
         label.hidden = true;
 
-        t[index] = label;
+        tds[index] = label;
 
-        setTodos(t);
+        setTodos(tds);
     }
 
     const getTodos = (tds) => {
@@ -81,16 +81,16 @@ const App = () => {
     }
 
     const showAll = () => {
-        let td = [...todos];
+        let tds = [...todos];
 
-        for(let i = 0; i < td.length; i++) {
-            let t = td[i];
+        for(let i = 0; i < tds.length; i++) {
+            let t = tds[i];
 
             t.hidden = false;
-            td[i] = t;
+            tds[i] = t;
         }
 
-        setTodos(td);
+        setTodos(tds);
     }
 
     return (
