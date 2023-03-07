@@ -13,11 +13,14 @@ const Label = (props) => {
             </div>
         )
     } else {
+        let text = props.text;
+        let newText = text.split("\n").map(e => <p key={e} className={labelClassName}>{e}</p>);
+
         return (
             <div className={hidden ? "hidden" : "todo-wrapper"}>
                 <div className="sub-wrapper" onClick={props.onClick}>
                     <h3 className={labelClassName}>{props.title}</h3>
-                    <p className={labelClassName}>{props.text}</p>
+                    {newText}
                 </div>
                 
     
