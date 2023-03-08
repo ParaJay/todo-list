@@ -180,7 +180,7 @@ const App = () => {
                     <div className="right-item">
                         <Button onClick={showAll} text="Show All"></Button>
                         <button className="invis">____</button>
-                        <Button onClick={() => toggleBlock()} text={"view: " + block} ></Button>
+                        <Button onClick={() => toggleBlock()} text={"view: " + (block ? "block" : "row")} ></Button>
                     </div>
                     <br/>
 
