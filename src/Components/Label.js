@@ -18,21 +18,23 @@ const Label = (props) => {
     var labelClassName = "note-label";
 
     if(props.isChecked) labelClassName += " checked";
-    if(props.isHidden) labelClassName += " hidden";
+    if(hidden) labelClassName += " hidden";
+
+    var wrapperClassName = props.isBlock && !props.isExpanded ? "block-item" : "note-wrapper";
+    if(hidden) wrapperClassName += " hidden";
 
     if(!props.isExpanded) {
         return (
-            <div className={hidden ? "hidden" : "note-wrapper"} onClick={props.onClick}>
+            <div className={wrapperClassName} onClick={props.onClick}>
                 <h3 className={labelClassName}>{props.title}</h3>
             </div>
         )
     } else {
-        let random = (Math.random() * Math.random()).toString().slice(0, 4);
         let text = props.text;
         let newText = text.split("\n").map(e => <p key={getRandom() + "-" + e} className={labelClassName}>{e}</p>);
 
         return (
-            <div className={hidden ? "hidden" : "note-wrapper"}>
+            <div className={wrapperClassName}>
                 <div className="sub-wrapper" onClick={props.onClick}>
                     <h3 className={labelClassName}>{props.title}</h3>
                     {newText}

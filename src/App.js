@@ -10,6 +10,7 @@ const App = () => {
     const [title, setTitle] = useState("");
     const [notes, setNotes] = useState([]);
     const [dialog, setDialogue] = useState(false);
+    const [block, setBlock] = useState(false);
 
     const onTitleChange = (e) => { setTitle(e.target.value); }
     const onTextChange = (e) => { setText(e.target.value); }
@@ -108,29 +109,58 @@ const App = () => {
 
     const getNotes = (tds) => {
         if(!tds) return <></>
-        let notes = [];
+        let wrapped = [];
+        let unwrapped = [];
     
         for(let i = 0; i < tds.length; i++) {
-            notes.push(
-            <Label
-                key={i}
-                title={tds[i].title}
-                text={tds[i].text} 
-                isChecked={tds[i].checked} 
-                isHidden={tds[i].hidden}
-                onCheck={() => checkNote(i)}
-                onRemove={() => removeNote(i)}
-                onHide={() => hideNote(i)}
-                onClick={() => expandNote(i)}
-                isExpanded={tds[i].expanded}
-                >
-    
-            </Label>);
-    
-        notes.push(<Separator key={"sep-" + i}/>)
+            let label = <Label
+            key={i}
+            title={tds[i].title}
+            text={tds[i].text} 
+            isChecked={tds[i].checked} 
+            isHidden={tds[i].hidden}
+            onCheck={() => checkNote(i)}
+            onRemove={() => removeNote(i)}
+            onHide={() => hideNote(i)}
+            onClick={() => expandNote(i)}
+            isExpanded={tds[i].expanded}
+            isBlock={block}
+            >
+
+             </Label>;
+
+            let doWrap = block && !tds[i].expanded;
+
+            if(doWrap) {
+                wrapped.push(label);
+                wrapped.push(<Separator key={"sep-" + i}/>)
+            } else {
+                unwrapped.push(label);
+                unwrapped.push(<Separator key={"sep-" + i}/>)
+            }
         }
-    
-        return <>{notes}</>;
+
+        let sepWrapped = [];
+        let curr = [];
+        const perRow = 5;
+
+        for(let i = 0; i < wrapped.length; i++) {
+            curr.push(
+                wrapped[i]
+            )
+
+            if(curr.length === (perRow * 2)) {
+                sepWrapped.push(<div key={"c-w-" + i } className="wrapper">{curr}</div>);
+
+                curr = [];
+            }
+        }
+
+        if(curr.length > 0) {
+            sepWrapped.push(<div key={"c-w-x" } className="wrapper">{curr}</div>);
+        }
+
+        return <>{unwrapped}{sepWrapped}</>;
     }
 
     const showAll = () => {
@@ -141,18 +171,55 @@ const App = () => {
         setNotes(tds);
     }
 
+    const toggleBlock = () => {
+        setBlock(!block);
+    }
+
     const ND = <NoteDialog visible={dialog} closeCallback={
         () => setDialogue(false)
     } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote}/>;
 
+    const wrapNotes = () => {
+        let nts = getNotes(notes);
+        let wrapped = [];
+        let unwrapped = [];
+        let doWrap = false;
+
+        console.log(nts);
+
+        for(let i = 0; i < nts.length; i++) {
+            let index = notes.indexOf(nts[i].title);
+
+            console.log(nts[i]);
+
+            if(block && !nts[i].isExpanded) doWrap = true;
+
+            if(doWrap) {
+                wrapped.push(nts[i]);
+            } else {
+                unwrapped.push(nts[i]);
+            }
+        }
+
+        return (
+            <>
+            <div className="column-wrapper">{wrapped}</div>
+            {unwrapped}
+            </>
+        )
+    }
+
+    const notesWrapperClassName = block ? "wrapper" : "column-wrapper";
+
     return (
         <> 
-        {ND}
+            {ND}
             {getNotes(notes)}
             <br/><br/><br/>
             <Form onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange}></Form>
             <br/><br/>
             <button onClick={showAll}>Show All</button>
+            <button onClick={() => toggleBlock()}>View as {block ? "Rows" : "Blocks"}</button>
         </>
       );
 }

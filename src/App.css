@@ -23,6 +23,17 @@
     border: solid 2px;
 }
 
+.block-item {
+    width: 33%;
+    border: solid 2px;
+}
+
+.column-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+
 .separator {
     margin: 1px;
 }
