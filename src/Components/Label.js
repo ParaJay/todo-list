@@ -1,3 +1,5 @@
+import Button from "./Button";
+
 const getRandom = () => {
     const alpha = "abcdefghijklmnopqrstuvwxys";
 
@@ -17,12 +19,12 @@ const Label = (props) => {
     if(props.isChecked) labelClassName += " checked";
     if(hidden) labelClassName += " hidden";
 
-    var wrapperClassName = props.isBlock && !props.isExpanded ? "block-item" : "note-wrapper";
+    var wrapperClassName = props.theme + " " + props.isBlock && !props.isExpanded ? "block-item" : "note-wrapper";
     if(hidden) wrapperClassName += " hidden";
 
     var wrapperStyle = props.colour;
 
-    if(!wrapperStyle) wrapperStyle = "#ffffff";
+    if(!wrapperStyle) wrapperStyle = props.theme === "dark" ? "#333" : "#fff";
 
     if(!props.isExpanded) {
         return (
@@ -43,17 +45,17 @@ const Label = (props) => {
                 
                 <div className="wrapper">
                     <div>
-                        <button onClick={props.onCheck}>Check</button>
+                        <Button text={"Check"} onClick={props.onCheck} theme={props.theme}></Button>
                     </div>
     
                     <div className="centered-item">
-                        <button onClick={props.onHide}>Hide</button>
+                        <Button text={"Hide"} onClick={props.onHide} theme={props.theme}></Button>
                     </div>
 
-                    <input type="color" id="labelColour" name="labelColour" defaultValue={wrapperStyle} onChange={(e) => props.onColour(props.index, e.target.value)}/>
+                    <input className={props.theme} type="color" id="labelColour" name="labelColour" defaultValue={wrapperStyle} onChange={(e) => props.onColour(props.index, e.target.value)}/>
     
                     <div className="right-item">
-                        <button onClick={props.onRemove}>Delete</button>
+                        <Button text={"Delete"} onClick={props.onRemove} theme={props.theme}></Button>
                     </div>
                 </div>
             </div>
