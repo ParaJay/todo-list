@@ -44,7 +44,7 @@ function NoteDialog(props) {
         onAfterOpen={afterVisible}
         onRequestClose={() => dispose(props.closeCallback)}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel="Existing Note"
         >
         <h2 ref={(_subtitle) => (subtitle = _subtitle)}>This Note already exists, what do you want to do?</h2>
         <div className="wrapper">
