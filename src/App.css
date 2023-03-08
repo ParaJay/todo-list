@@ -48,5 +48,20 @@ textarea {
 
 .hidden {
     display: none;
-    /* visibility: hidden */
 }
+
+.invis {
+    visibility: hidden;
+}
+
+.dark {
+    background-color: #333;
+    color: #fff;
+}
+
+.light {
+    background-color: #fff;
+    color: #333;
+}
+
+button:hover {background-color: rgb(21, 236, 236);}
