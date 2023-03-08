@@ -141,7 +141,7 @@ const App = () => {
         setNotes(tds);
     }
 
-    const ND = <NoteDialog open={dialog} closeCallback={
+    const ND = <NoteDialog visible={dialog} closeCallback={
         () => setDialogue(false)
     } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote}/>;
 
