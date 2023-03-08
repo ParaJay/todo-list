@@ -11,6 +11,7 @@ const Notes = (props) => {
     for(let i = 0; i < tds.length; i++) {
         let label = <Label
         key={i}
+        index={i}
         title={tds[i].title}
         text={tds[i].text} 
         isChecked={tds[i].checked} 
@@ -21,6 +22,8 @@ const Notes = (props) => {
         onClick={() => props.onClick(i)}
         isExpanded={tds[i].expanded}
         isBlock={props.block}
+        onColour={props.onColour}
+        colour={tds[i].colour}
         >
 
          </Label>;

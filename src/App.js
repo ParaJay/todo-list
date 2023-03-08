@@ -11,6 +11,8 @@ const App = () => {
     const [dialog, setDialogue] = useState(false);
     const [block, setBlock] = useState(false);
 
+    const colours = {};
+
     const onTitleChange = (e) => { setTitle(e.target.value); }
     const onTextChange = (e) => { setText(e.target.value); }
 
@@ -82,9 +84,15 @@ const App = () => {
         changeNote(index, "expanded", false);
     }
 
-    const overwriteNote = async () => {
+    const overwriteNote = () => {
         changeNote(getIndex(title), "text", text);
         setTimeout(() => clearInputs(), 0);
+    }
+
+    const colourNote = (index, colour) => {
+        colours[notes[index].title] = colour;
+        console.log(colour)
+        changeNote(index, "colour", colour)
     }
 
     const mergeNote = () => {
@@ -125,7 +133,7 @@ const App = () => {
     return (
         <> 
             {ND}
-            <Notes block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote}></Notes>
+            <Notes block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onColour={colourNote} colours={colours}></Notes>
             <br/><br/><br/>
             <Form onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange}></Form>
             <br/><br/>
