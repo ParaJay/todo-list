@@ -41,7 +41,7 @@ const Notes = (props) => {
     const perRow = 5;
 
     for(let i = 0; i < wrapped.length; i++) {
-        if(wrapped[i].props.isHidden) continue;
+        if(wrapped[i].props.isHidden || (i > 0 && wrapped[i - 1].props.isHidden)) continue;
 
         curr.push(wrapped[i]);
 
