@@ -5,9 +5,16 @@ import Form from "./Components/Form";
 import Input from "./Components/Input";
 import NoteDialog from "./Components/NoteDialog";
 import Notes from "./Components/Notes";
+import DarkTheme from "./themes/DarkTheme";
+import LightTheme from "./themes/LightTheme";
 
 const App = () => {
     const themes = ["default", "light", "dark"];
+
+    const themeMap = {
+        "light": LightTheme(),
+        "dark": DarkTheme()
+    }
 
     const [text, setText] = useState("");
     const [title, setTitle] = useState("");
@@ -101,7 +108,6 @@ const App = () => {
 
     const colourNote = (index, colour) => {
         colours[notes[index].title] = colour;
-        console.log(colour)
         changeNote(index, "colour", colour)
     }
 
@@ -157,36 +163,36 @@ const App = () => {
 
     const ND = <NoteDialog visible={dialog} closeCallback={
         () => setDialogue(false)
-    } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote} theme={theme}/>;
+    } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote}/>;
 
     const Display = () => {
         let first;
         let second;
 
-        let n = <Notes theme={theme} filter={search} block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onColour={colourNote} colours={colours}></Notes>
+        let n = <Notes filter={search} block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onColour={colourNote} colours={colours}></Notes>
         let w = (
             <div className="wrapper">
                 <div>
-                    <Form theme={theme} onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange}></Form>
+                    <Form onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange}></Form>
                 </div>
 
                 <div className="column-wrapper right-item note-wrapper">
                     <div className="right-item">
-                        <Button onClick={showAll} theme={theme} text="Show All"></Button>
+                        <Button onClick={showAll} text="Show All"></Button>
                         <button className="invis">____</button>
-                        <Button onClick={() => toggleBlock()} text={"view: " + (block ? "rows" : "blocks")} theme={theme}></Button>
+                        <Button onClick={() => toggleBlock()} text={"view: " + (block ? "rows" : "blocks")} ></Button>
                     </div>
                     <br/>
 
                     <div className="right-item">
-                        <Input theme={theme} onChange={onSearchChange} text="Search"></Input>
+                        <Input  onChange={onSearchChange} text="Search"></Input>
                     </div>
 
                     <br/>
 
-                    <Button id="change-display-loc" onClick={toggleLocation} text={"display: " + (location === "above" ? "below" : "above")} theme={theme}></Button>
+                    <Button id="change-display-loc" onClick={toggleLocation} text={"display: " + (location === "above" ? "below" : "above")} ></Button>
 
-                    <Button onClick={toggleTheme} text={"theme: " + theme} theme={theme}></Button>
+                    <Button onClick={toggleTheme} text={"theme: " + theme} ></Button>
                 </div>
             </div>
         )
@@ -200,7 +206,7 @@ const App = () => {
         }
 
         return (
-            <div className={theme}>
+            <div className="themed">
                 {ND}
                 {first}
                 <br/><br/>
@@ -209,20 +215,21 @@ const App = () => {
         )
     }
 
+    function injectCss(css) {
+        let styleSheet = document.createElement("style");
+        styleSheet.setAttribute("type", "text/css");
+        styleSheet.setAttribute("id", "themeStyle");
+        styleSheet.innerText = css;
+        document.head.appendChild(styleSheet);
+      }
+
     useEffect(() => {
-        switch (theme) {
-        case "dark":
-            document.body.classList.add("dark");
-            document.body.classList.remove("light");
-            break;
-        case "light":
-            document.body.classList.add("light");
-            document.body.classList.remove("dark");
-        default:
-            document.body.classList.remove("light");
-            document.body.classList.remove("dark");
-            break;
-        }
+        var stylesheet = document.getElementById('themeStyle');
+        if(stylesheet) stylesheet.parentNode.removeChild(stylesheet);
+
+        injectCss(themeMap[theme]);
+
+        document.body.classList.add("themed");
     }, [theme]);
 
     return Display();
