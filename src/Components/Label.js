@@ -26,7 +26,7 @@ const Label = (props) => {
 
     if(!props.isExpanded) {
         return (
-            <div className={wrapperClassName} onClick={props.onClick} style={{"backgroundColor": wrapperStyle}}>
+            <div className={wrapperClassName} onClick={props.onClick} style={{"backgroundColor": wrapperStyle}} id={props.title}>
                 <h3 className={labelClassName}>{props.title}</h3>
             </div>
         )
@@ -36,7 +36,7 @@ const Label = (props) => {
 
         return (
             <div className={wrapperClassName} style={{"backgroundColor": wrapperStyle}}>
-                <div className="sub-wrapper" onClick={props.onClick}>
+                <div className="sub-wrapper" onClick={props.onClick} id={props.title}>
                     <h3 className={labelClassName}>{props.title}</h3>
                     {newText}
                 </div>
