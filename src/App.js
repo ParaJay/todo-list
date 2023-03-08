@@ -180,7 +180,7 @@ const App = () => {
                     <div className="right-item">
                         <Button onClick={showAll} text="Show All"></Button>
                         <button className="invis">____</button>
-                        <Button onClick={() => toggleBlock()} text={"view: " + (block ? "rows" : "blocks")} ></Button>
+                        <Button onClick={() => toggleBlock()} text={"view: " + block} ></Button>
                     </div>
                     <br/>
 
@@ -190,7 +190,7 @@ const App = () => {
 
                     <br/>
 
-                    <Button id="change-display-loc" onClick={toggleLocation} text={"display: " + (location === "above" ? "below" : "above")} ></Button>
+                    <Button id="change-display-loc" onClick={toggleLocation} text={"display: " + location} ></Button>
 
                     <Button onClick={toggleTheme} text={"theme: " + theme} ></Button>
                 </div>
