@@ -3,10 +3,11 @@ import React from "react";
 const Input = (props) => {
     const placeholder = `Enter ${props.text}...`
     const onChange = props.onChange;
+    const className = "note-input " + props.theme;
 
     if(props.isTextArea) {
         return (
-            <textarea className="note-input" 
+            <textarea className={className}
                 placeholder={placeholder}
                 required={true} 
                 cols={56} 
@@ -16,7 +17,7 @@ const Input = (props) => {
             </textarea>
         );
     } else {
-        return (<input className="note-input" required={true} onChange={onChange} placeholder={placeholder}></input>);
+        return (<input className={className} required={true} onChange={onChange} placeholder={placeholder}></input>);
     }
 }
 
