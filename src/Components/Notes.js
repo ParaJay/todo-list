@@ -3,12 +3,20 @@ import Separator from "./Seperator";
 
 const Notes = (props) => {
     let tds = props.notes;
+    let filter = props.filter.toLowerCase();
 
     if(!tds) return <></>
     let wrapped = [];
     let unwrapped = [];
 
+    const matchesFilter = (note) => {
+        if(!filter) return true;
+
+        return (note.title.toLowerCase().includes(filter) || note.text.toLowerCase().includes(filter))
+    }
+
     for(let i = 0; i < tds.length; i++) {
+        if(!matchesFilter(tds[i])) continue;
         let label = <Label
         key={i}
         index={i}
