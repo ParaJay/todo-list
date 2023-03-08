@@ -19,12 +19,12 @@ const Label = (props) => {
     if(props.isChecked) labelClassName += " checked";
     if(hidden) labelClassName += " hidden";
 
-    var wrapperClassName = props.theme + " " + props.isBlock && !props.isExpanded ? "block-item" : "note-wrapper";
+    var wrapperClassName = "themed " + props.isBlock && !props.isExpanded ? "block-item" : "note-wrapper";
     if(hidden) wrapperClassName += " hidden";
 
     var wrapperStyle = props.colour;
 
-    if(!wrapperStyle) wrapperStyle = props.theme === "dark" ? "#333" : "#fff";
+    // if(!wrapperStyle) wrapperStyle = props.colour === "dark" ? "#333" : "#fff";
 
     if(!props.isExpanded) {
         return (
@@ -45,17 +45,17 @@ const Label = (props) => {
                 
                 <div className="wrapper">
                     <div>
-                        <Button text={"Check"} onClick={props.onCheck} theme={props.theme}></Button>
+                        <Button text={"Check"} onClick={props.onCheck}></Button>
                     </div>
     
                     <div className="centered-item">
-                        <Button text={"Hide"} onClick={props.onHide} theme={props.theme}></Button>
+                        <Button text={"Hide"} onClick={props.onHide}></Button>
                     </div>
 
-                    <input className={props.theme} type="color" id="labelColour" name="labelColour" defaultValue={wrapperStyle} onChange={(e) => props.onColour(props.index, e.target.value)}/>
+                    <input className="themed" type="color" id="labelColour" name="labelColour" defaultValue={wrapperStyle} onChange={(e) => props.onColour(props.index, e.target.value)}/>
     
                     <div className="right-item">
-                        <Button text={"Delete"} onClick={props.onRemove} theme={props.theme}></Button>
+                        <Button text={"Delete"} onClick={props.onRemove}></Button>
                     </div>
                 </div>
             </div>

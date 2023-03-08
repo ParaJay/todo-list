@@ -19,7 +19,6 @@ const Notes = (props) => {
         if(!matchesFilter(tds[i])) continue;
         let label = <Label
         key={i}
-        theme={props.theme}
         index={i}
         title={tds[i].title}
         text={tds[i].text} 

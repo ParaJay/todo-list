@@ -48,9 +48,9 @@ function NoteDialog(props) {
         >
         <h2 ref={(_subtitle) => (subtitle = _subtitle)}>This Note already exists, what do you want to do?</h2>
         <div className="wrapper">
-            <button className="left-item" onClick={() => onSubmit(props.onOverwrite)}>Overwrite</button>
-            <button onClick={() => onSubmit(props.onMerge)}>Merge</button>
-            <button className="right-item" onClick={onSubmit}>Cancel</button>
+            <button className="left-item themed" onClick={() => onSubmit(props.onOverwrite)}>Overwrite</button>
+            <button className="themed" onClick={() => onSubmit(props.onMerge)}>Merge</button>
+            <button className="right-item themed" onClick={onSubmit}>Cancel</button>
         </div>
         </Modal>
         );
