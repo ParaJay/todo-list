@@ -19,7 +19,7 @@ const Label = (props) => {
     if(props.isChecked) labelClassName += " checked";
     if(hidden) labelClassName += " hidden";
 
-    var wrapperClassName = "themed " + props.isBlock && !props.isExpanded ? "block-item" : "note-wrapper";
+    var wrapperClassName = "themed " + (props.isBlock && !props.isExpanded ? "block-item" : "note-wrapper");
     if(hidden) wrapperClassName += " hidden";
 
     var wrapperStyle = props.colour;
