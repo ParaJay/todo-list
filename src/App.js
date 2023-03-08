@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
 import Form from "./Components/Form";
-import Label from "./Components/Label";
-import Separator from "./Components/Seperator";
 import NoteDialog from "./Components/NoteDialog";
 import Notes from "./Components/Notes";
 
@@ -20,7 +18,7 @@ const App = () => {
         let tds = [...notes];
         let toChange = tds[index];
 
-        if(value == "invert") value = !toChange[key];
+        if(value === "invert") value = !toChange[key];
 
         tds[index][key] = value;
 
@@ -107,7 +105,7 @@ const App = () => {
 
         return false;
     }
-    
+
     const showAll = () => {
         let tds = [...notes];
 
