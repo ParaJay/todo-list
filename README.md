@@ -1,1 +1,3 @@
-A version of todo-list using functional components
+A todo-list made using functional components
+
+https://parajay.github.io/todo-list/
