@@ -5,8 +5,11 @@ import "./App.css";
 import Button from "./Components/Button";
 import Form from "./Components/Form";
 import Input from "./Components/Input";
+import NoteCreator from "./Components/NoteCreator";
 import NoteDialog from "./Components/NoteDialog";
 import Notes from "./Components/Notes";
+import Separator from "./Components/Seperator";
+import Settings from "./Components/Settings";
 
 const App = () => {
     const themes = ["default", "dark"];
@@ -20,6 +23,9 @@ const App = () => {
     const [location, setLocation] = useState("above");
     const [theme, setTheme] = useState(themes[0]);
     const [themeStyles] = useState({});
+    const [isCreating, setIsCreating] = useState(false);
+    const [isEditingSettings, setIsEditingSettings] = useState(false);
+    const [view, setView] = useState(null);
 
     for(let i = 1; i < themes.length; i++) {
         let theme = themes[i];
@@ -72,6 +78,8 @@ const App = () => {
 
     const addNote = (e) => {
         if(e) e.preventDefault();
+
+        setIsCreating(false)
 
         if(noteExists(title)) {
             promptNote();
@@ -185,60 +193,6 @@ const App = () => {
         setTheme(themes[index]);
     }
 
-    const ND = <NoteDialog visible={dialog} closeCallback={
-        () => setDialogue(false)
-    } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote}/>;
-
-    const Display = () => {
-        let first;
-        let second;
-
-        let n = <Notes filter={search} block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onEdit={editNote} onColour={colourNote} colours={colours}></Notes>
-        let w = (
-            <div className="wrapper">
-                <div>
-                    <Form onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange}></Form>
-                </div>
-
-                <div className="column-wrapper right-item note-wrapper">
-                    <div className="right-item">
-                        <Button onClick={showAll} text="Show All"></Button>
-                        <button className="invis">____</button>
-                        <Button onClick={() => toggleBlock()} text={"view: " + (block ? "block" : "row")} ></Button>
-                    </div>
-                    <br/>
-
-                    <div className="right-item">
-                        <Input  onChange={onSearchChange} text="Search"></Input>
-                    </div>
-
-                    <br/>
-
-                    <Button id="change-display-loc" onClick={toggleLocation} text={"display: " + location} ></Button>
-
-                    <Button onClick={toggleTheme} text={"theme: " + theme} ></Button>
-                </div>
-            </div>
-        )
-
-        if(location === "above") {
-            first = n;
-            second = w;
-        } else {
-            first = w;
-            second = n;
-        }
-
-        return (
-            <div className="themed">
-                {ND}
-                {first}
-                <br/><br/>
-                {second}
-            </div>
-        )
-    }
-
     function injectCss(css) {
         let styleSheet = document.createElement("style");
         styleSheet.setAttribute("type", "text/css");
@@ -256,7 +210,39 @@ const App = () => {
         document.body.classList.add("themed");
     }, [theme]);
 
-    return Display();
+    if(dialog) return <NoteDialog isVisible={dialog} closeCallback={
+        () => setDialogue(false)
+    } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote} theme={theme}/>;
+
+    if(isCreating) return <NoteCreator onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange} isVisible={isCreating} onClose={() => setIsCreating(false)} theme={theme}></NoteCreator>;
+
+    return (
+        <div className="themed" onClick={() => setIsCreating(false)}>
+            <div className="navbar">
+                <Input className="right nav-item" onChange={onSearchChange} text="Search"></Input>
+                <Button onClick={() => setIsEditingSettings(true)} className="right nav-item" text="Settings"></Button>
+            </div>
+
+            <div className="">
+                <h3>Notes</h3>
+                <Notes filter={search} block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onEdit={editNote} onColour={colourNote} colours={colours}></Notes>
+                <Settings isVisible={isEditingSettings} onClose={() => setIsEditingSettings(false)} callbacks = {
+                    {
+                        "toggleBlock": toggleBlock,
+                        "onSearchChange": onSearchChange,
+                        "toggleLocation": toggleLocation,
+                        "toggleTheme": toggleTheme,
+                        "showAll": showAll
+                    }
+                } location={location} theme={theme} block={block}></Settings>
+
+                <Button className={"create-note btm-right"} onClick={(e) => {
+                        e.stopPropagation();
+                        setIsCreating(true);
+                        }} text="+"/>
+                </div>            
+        </div>
+    )
 }
 
 export default App;
