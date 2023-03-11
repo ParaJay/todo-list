@@ -34,8 +34,12 @@ function NoteDialog(props) {
         dispose(callback);
     }
 
-    if (props.visible && !isVisible) {
+    if (props.isVisible && !isVisible) {
         setIsVisible(true);
+    }
+
+    if(props.theme === "dark") {
+        customStyles.content.backgroundColor = "#333";
     }
 
     return (
