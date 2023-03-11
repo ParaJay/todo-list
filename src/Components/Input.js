@@ -3,7 +3,7 @@ import React from "react";
 const Input = (props) => {
     const placeholder = `Enter ${props.text}...`
     const onChange = props.onChange;
-    const className = "note-input themed";
+    const className = "note-input themed " + props.className;
 
     if(props.isTextArea) {
         return (

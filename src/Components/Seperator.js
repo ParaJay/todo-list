@@ -1,5 +1,5 @@
-const Separator = () => {
-    return (<div className="separator"></div>)
+const Separator = (props) => {
+    return (<div className={"separator " + props.className}></div>)
 }
 
 
