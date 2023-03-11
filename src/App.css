@@ -35,12 +35,6 @@
     justify-content: center;
 }
 
-.navbar {
-    /* display: flex; */
-    /* flex-direction: column; */
-}
-
-
 .separator, .navbar {
     margin: 4px;
 }
