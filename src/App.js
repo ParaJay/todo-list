@@ -1,3 +1,5 @@
+//TODO: Add button, allow full focus of labels, will display LabelView.js with prps for label and cxhange vents
+
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Button from "./Components/Button";
@@ -5,16 +7,9 @@ import Form from "./Components/Form";
 import Input from "./Components/Input";
 import NoteDialog from "./Components/NoteDialog";
 import Notes from "./Components/Notes";
-import DarkTheme from "./themes/DarkTheme";
-import LightTheme from "./themes/LightTheme";
 
 const App = () => {
-    const themes = ["default", "light", "dark"];
-
-    const themeMap = {
-        "light": LightTheme(),
-        "dark": DarkTheme()
-    }
+    const themes = ["default", "dark"];
 
     const [text, setText] = useState("");
     const [title, setTitle] = useState("");
@@ -24,6 +19,19 @@ const App = () => {
     const [search, setSearch] = useState("");
     const [location, setLocation] = useState("above");
     const [theme, setTheme] = useState(themes[0]);
+    const [themeStyles] = useState({});
+
+    for(let i = 1; i < themes.length; i++) {
+        let theme = themes[i];
+
+        if(themeStyles[theme]) { continue };
+
+        new Promise((resolve) => fetch((require("./themes/" + theme + ".txt"))).then(r => r.text()).then(text => {
+            resolve(text);
+        })).then((text) => {
+            themeStyles[theme] = text;
+        })
+    }
 
     const colours = {};
 
@@ -90,7 +98,7 @@ const App = () => {
         changeNote(index, "checked", "invert");
     }
 
-    const expandNote = (index) => {
+    const expandNote = (e, index) => {
         changeNote(index, "expanded", "invert");
 
         if(notes[index].expanded) document.getElementById(notes[index].title).scrollIntoView(false);
@@ -104,6 +112,22 @@ const App = () => {
     const overwriteNote = () => {
         changeNote(getIndex(title), "text", text);
         setTimeout(() => clearInputs(), 0);
+    }
+
+    const editNote = (index) => {
+        let inputs = document.getElementsByClassName("note-input");
+
+        for(let i = 0; i < inputs.length; i++) {
+            let inp = inputs[i];
+
+            if(inp.placeholder.toLowerCase().includes("note")) {
+                if(inp.tagName == "INPUT") {
+                    inputs[i].value = notes[index].title;
+                } else {
+                    inputs[i].value = notes[index].text;
+                }
+            }
+        }
     }
 
     const colourNote = (index, colour) => {
@@ -169,7 +193,7 @@ const App = () => {
         let first;
         let second;
 
-        let n = <Notes filter={search} block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onColour={colourNote} colours={colours}></Notes>
+        let n = <Notes filter={search} block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onEdit={editNote} onColour={colourNote} colours={colours}></Notes>
         let w = (
             <div className="wrapper">
                 <div>
@@ -227,7 +251,7 @@ const App = () => {
         var stylesheet = document.getElementById('themeStyle');
         if(stylesheet) stylesheet.parentNode.removeChild(stylesheet);
 
-        injectCss(themeMap[theme]);
+        injectCss(themeStyles[theme]);
 
         document.body.classList.add("themed");
     }, [theme]);
