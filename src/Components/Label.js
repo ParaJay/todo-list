@@ -50,9 +50,9 @@ const Label = (props) => {
     
                     <div className="centered-item">
                         <Button text={"Hide"} onClick={props.onHide}></Button>
-                    </div>
-
-                    <input className="themed" type="color" id="labelColour" name="labelColour" defaultValue={wrapperStyle} onChange={(e) => props.onColour(props.index, e.target.value)}/>
+                        <input className="themed" type="color" id="labelColour" name="labelColour" defaultValue={wrapperStyle} onChange={(e) => props.onColour(props.index, e.target.value)}/>
+                        <Button text={"Edit"} onClick={props.onEdit}/>
+                    </div>                    
     
                     <div className="right-item">
                         <Button text={"Delete"} onClick={props.onRemove}></Button>

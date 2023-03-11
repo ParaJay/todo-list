@@ -27,7 +27,8 @@ const Notes = (props) => {
         onCheck={() => props.onCheck(i)}
         onRemove={() => props.onRemove(i)}
         onHide={() => props.onHide(i)}
-        onClick={() => props.onClick(i)}
+        onClick={(e) => props.onClick(e, i)}
+        onEdit={() => props.onEdit(i)}
         isExpanded={tds[i].expanded}
         isBlock={props.block}
         onColour={props.onColour}
