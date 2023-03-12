@@ -1,15 +1,16 @@
-//TODO: Add button, allow full focus of labels, will display LabelView.js with prps for label and cxhange vents
-
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Button from "./Components/Button";
-import Form from "./Components/Form";
 import Input from "./Components/Input";
 import NoteCreator from "./Components/NoteCreator";
 import NoteDialog from "./Components/NoteDialog";
 import Notes from "./Components/Notes";
-import Separator from "./Components/Seperator";
+import Panel from "./Components/Panel";
 import Settings from "./Components/Settings";
+import { loadTheme } from "./themes";
+import * as Themes from "./themes";
+import SettingsButton from "./Components/SettingsButton";
+import { images } from "./images";
 
 const App = () => {
     const themes = ["default", "dark"];
@@ -20,12 +21,19 @@ const App = () => {
     const [dialog, setDialogue] = useState(false);
     const [block, setBlock] = useState(false);
     const [search, setSearch] = useState("");
-    const [location, setLocation] = useState("above");
     const [theme, setTheme] = useState(themes[0]);
     const [themeStyles] = useState({});
     const [isCreating, setIsCreating] = useState(false);
     const [isEditingSettings, setIsEditingSettings] = useState(false);
     const [view, setView] = useState(null);
+
+    const settingsButton = <SettingsButton
+                            key="settings"
+                            setIsEditingSettings={setIsEditingSettings} 
+                            image = {images["settings"]}
+                            ></SettingsButton>
+
+    themes.map((e) => loadTheme(e));
 
     for(let i = 1; i < themes.length; i++) {
         let theme = themes[i];
@@ -82,8 +90,13 @@ const App = () => {
         setIsCreating(false)
 
         if(noteExists(title)) {
-            promptNote();
-            return;
+            if(view) {
+                overwriteNote();
+                return;
+            } else {
+                promptNote();
+                return;
+            }
         }
 
         let t = [...notes];
@@ -123,19 +136,7 @@ const App = () => {
     }
 
     const editNote = (index) => {
-        let inputs = document.getElementsByClassName("note-input");
-
-        for(let i = 0; i < inputs.length; i++) {
-            let inp = inputs[i];
-
-            if(inp.placeholder.toLowerCase().includes("note")) {
-                if(inp.tagName == "INPUT") {
-                    inputs[i].value = notes[index].title;
-                } else {
-                    inputs[i].value = notes[index].text;
-                }
-            }
-        }
+        setView(notes[index])
     }
 
     const colourNote = (index, colour) => {
@@ -174,17 +175,6 @@ const App = () => {
         setBlock(!block);
     }
 
-    const toggleLocation = () => {
-        setLocation(location === "above" ? "below" : "above");
-        setTimeout(() => {
-            if(location === "above") {
-                window.scrollTo(0, 0);
-            } else {
-                window.scrollTo(0, window.screen.height);
-            }
-        });
-    }
-
     const toggleTheme = () => {
         let index = themes.indexOf(theme) + 1;
 
@@ -214,33 +204,124 @@ const App = () => {
         () => setDialogue(false)
     } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote} theme={theme}/>;
 
-    if(isCreating) return <NoteCreator onSubmit={addNote} onTextChange={onTextChange} onTitleChange={onTitleChange} isVisible={isCreating} onClose={() => setIsCreating(false)} theme={theme}></NoteCreator>;
+    if(view) {
+        return (
+            <NoteCreator 
+            onSubmit={() => { overwriteNote(); addNote(); setView(null); }}
+            onTextChange={onTextChange} 
+            onTitleChange={onTitleChange} 
+            onSettingsClose={() => setIsEditingSettings(false)}
+            onBack={() => setView(null)} 
+            onSettings={() => setIsEditingSettings(true)} 
+            theme={theme}
+            images={images}
+            settingsButton={settingsButton}
+            isEditingSettings={isEditingSettings}
+            setIsEditingSettings={setIsEditingSettings}
+            text={view.text}
+            title={view.title}
+            ></NoteCreator>
+        )
+    }
+
+    if(isCreating) {
+        return (
+            <NoteCreator 
+            onSubmit={addNote} 
+            onTextChange={onTextChange} 
+            onTitleChange={onTitleChange} 
+            onSettingsClose={() => setIsEditingSettings(false)}
+            onBack={() => setIsCreating(false)}
+            onSettings={() => setIsEditingSettings(true)} 
+            theme={theme}
+            images={images}
+            settingsButton={settingsButton}
+            isEditingSettings={isEditingSettings}
+            setIsEditingSettings={setIsEditingSettings}
+            ></NoteCreator>
+        )
+    }
+
+    const toggleSearchBar = () => { setSearchBar("invert"); }
+
+    const setSearchBar = (value) => {
+        let s = document.getElementsByClassName("search-bar")[0];
+
+        if(s.style.visibility === value) return;
+
+        if(value === "invert") value = s.style.visibility === "visible" ? "hidden" : "visible";
+
+        if(s) s.style.visibility = value;
+    }
 
     return (
-        <div className="themed" onClick={() => setIsCreating(false)}>
-            <div className="navbar">
-                <Input className="right nav-item" onChange={onSearchChange} text="Search"></Input>
-                <Button onClick={() => setIsEditingSettings(true)} className="right nav-item" text="Settings"></Button>
-            </div>
+        <div className="themed" onClick={() => {setIsCreating(false)}}>
+            <Panel
+                header = {
+                    (<>
+                    <h3 className="left top nav-item">Notes</h3>
+                    <Input className="right nav-item search-bar top-label" onChange={onSearchChange} text="Filter"></Input>
+                    <Button text="Search" image={images.search} className="stl top right" imageClassName="stl-img top right settings-img" onClick={toggleSearchBar}/>
 
-            <div className="">
-                <h3>Notes</h3>
-                <Notes filter={search} block={block} notes={notes} onCheck={checkNote} onRemove={removeNote} onHide={hideNote} onClick={expandNote} onEdit={editNote} onColour={colourNote} colours={colours}></Notes>
-                <Settings isVisible={isEditingSettings} onClose={() => setIsEditingSettings(false)} callbacks = {
-                    {
-                        "toggleBlock": toggleBlock,
-                        "onSearchChange": onSearchChange,
-                        "toggleLocation": toggleLocation,
-                        "toggleTheme": toggleTheme,
-                        "showAll": showAll
-                    }
-                } location={location} theme={theme} block={block}></Settings>
+                    {settingsButton}
 
-                <Button className={"create-note btm-right"} onClick={(e) => {
-                        e.stopPropagation();
-                        setIsCreating(true);
-                        }} text="+"/>
-                </div>            
+                    </>)
+                }
+
+                body = {
+                    (
+                        <>
+                        <br/><br/>
+                        <Notes 
+                        filter={search} 
+                        block={block} 
+                        notes={notes} 
+                        onCheck={checkNote} 
+                        onRemove={removeNote} 
+                        onHide={hideNote} 
+                        onClick={expandNote} 
+                        onEdit={editNote} 
+                        onColour={colourNote} 
+                        colours={colours}></Notes>
+                        </>
+                    )
+                }
+
+                settings = {(
+                    <Settings isVisible={isEditingSettings} onClose={() => setIsEditingSettings(false)} settings = {
+                        {
+                            "toggleBlock": { 
+                                type: "button",
+                                "value": toggleBlock,
+                                text: "view: " + (block ? "block" : "row")
+                            },
+
+                            "separator1":"",
+
+                            "toggleTheme": { 
+                                type: "button",
+                                "value": toggleTheme,
+                                text: "theme: " + theme
+                            },
+
+                            "showAll": {
+                                type: "button",
+                                "value": showAll
+                            }
+                        }
+                    } theme={theme} block={block}></Settings>
+                )}
+            
+                footer = {
+                    (
+                        <Button className={"create-note btm-right"} onClick={(e) => {
+                            e.stopPropagation();
+                            setIsCreating(true);
+                            }} text="+"/>
+                    )
+                }
+            
+            />
         </div>
     )
 }
