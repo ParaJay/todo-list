@@ -8,7 +8,6 @@ import Notes from "./Components/Notes";
 import Panel from "./Components/Panel";
 import Settings from "./Components/Settings";
 import { loadTheme } from "./themes";
-import * as Themes from "./themes";
 import SettingsButton from "./Components/SettingsButton";
 import { images } from "./images";
 
@@ -204,40 +203,23 @@ const App = () => {
         () => setDialogue(false)
     } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote} theme={theme}/>;
 
-    if(view) {
-        return (
-            <NoteCreator 
-            onSubmit={() => { overwriteNote(); addNote(); setView(null); }}
-            onTextChange={onTextChange} 
-            onTitleChange={onTitleChange} 
-            onSettingsClose={() => setIsEditingSettings(false)}
-            onBack={() => setView(null)} 
-            onSettings={() => setIsEditingSettings(true)} 
-            theme={theme}
-            images={images}
-            settingsButton={settingsButton}
-            isEditingSettings={isEditingSettings}
-            setIsEditingSettings={setIsEditingSettings}
-            text={view.text}
-            title={view.title}
-            ></NoteCreator>
-        )
-    }
+    const nc_onSubmit = isCreating ? addNote : () => {overwriteNote(); addNote(); setView(null); };
 
-    if(isCreating) {
+    if(view || isCreating) {
         return (
             <NoteCreator 
-            onSubmit={addNote} 
+            onSubmit={nc_onSubmit}
             onTextChange={onTextChange} 
             onTitleChange={onTitleChange} 
             onSettingsClose={() => setIsEditingSettings(false)}
-            onBack={() => setIsCreating(false)}
+            onBack={() => view ? setView() : setIsCreating()} 
             onSettings={() => setIsEditingSettings(true)} 
+            isEditingSettings={isEditingSettings}
             theme={theme}
             images={images}
             settingsButton={settingsButton}
-            isEditingSettings={isEditingSettings}
-            setIsEditingSettings={setIsEditingSettings}
+            text={view ? view.text : undefined}
+            title={view ? view.title : undefined}
             ></NoteCreator>
         )
     }
