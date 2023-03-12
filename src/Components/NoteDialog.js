@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import { getSubOrDefault } from "../themes";
 
 const customStyles = {
     content: {
@@ -38,9 +39,7 @@ function NoteDialog(props) {
         setIsVisible(true);
     }
 
-    if(props.theme === "dark") {
-        customStyles.content.backgroundColor = "#333";
-    }
+    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "backgroundColor", "#fff");
 
     return (
         <Modal
