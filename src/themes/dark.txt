@@ -1,0 +1,9 @@
+.themed {
+    background-color: #333;
+    color: #fff;
+}
+
+.settings-img {
+    filter: invert(100%);
+    background: none;
+}

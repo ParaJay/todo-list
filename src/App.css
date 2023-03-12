@@ -1,0 +1,188 @@
+.left-item {
+    margin-right: auto;
+}
+
+.note-label {
+    text-align: center;
+}
+
+.centered-item {
+    margin-left: auto;
+    text-align: center;
+}
+
+.right-item {
+    margin-left: auto;
+}
+
+.wrapper {
+    display: flex;
+}
+
+.note-wrapper {
+    border: solid 1px;
+    margin: 2px 2px;
+}
+
+.block-item {
+    width: 33%;
+    border: solid 2px;
+}
+
+.column-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.separator {
+    margin: 4px;
+}
+
+.checked {
+    text-decoration: line-through;
+}
+
+textarea {
+    resize: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.invis, .search-bar {
+    visibility: hidden;
+}
+
+button:hover, input[type=submit]:hover, input[type=color]:hover {
+    background-color: rgb(21, 236, 236);
+}
+
+.btm-right {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+}
+
+.action-btn, .create-note, .confirm-note, .back-btn, .settings-btn  {
+    border-radius: 100%;
+    text-align: center;
+    font-size: larger;
+    width: 42px;
+    height: 42px;
+    margin: 6px 6px;
+}
+
+.create-note {
+    background-color: yellow;
+}
+
+.confirm-note {
+    background-color: lime;
+}
+
+.right {
+    right: 0;
+}
+
+.nav-item, .icon {
+    padding: 6px 6px;
+    margin: 6px;
+}
+
+.fixed, .right, .top, .left {
+    position: fixed
+}
+
+.overflow {
+    overflow: auto;
+    height: 77vh;
+}
+
+.under-border {
+    border-bottom: solid 2px black;
+}
+
+.over-border {
+    border-top: solid 2px black;
+}
+
+.dropdown-content {
+    display: none;
+}
+
+.nav-item:hover .dropdown-content {
+    display: block;
+}
+
+.textarea {
+    border: none;
+}
+
+.center-nav-item {
+    margin-left: 15%;
+}
+
+.top, .top-label {
+    position: fixed;
+    top: 0%;
+}
+
+.max, .textarea {
+    padding: inherit;
+    width: 100%;
+    height: 99%;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+}
+
+.settings {
+    right: 0%;
+    width: 16%;
+}
+
+.stl {
+    position: fixed;
+    right: 16%;
+    top: 0%;
+    border: none;
+    background-color: inherit;
+}
+
+.stl-img{
+    position: fixed;
+    right: 15%;
+    margin-top: 2px;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+}
+
+.settings-img {
+    background: none;
+    border: none;
+}
+
+.top-label {
+    width: 40%;
+    left: calc(27%);
+    top: 5px;
+}
+
+.search-bar {
+    left: calc(24%);
+}
+
+.settings-btn {
+    margin-top: 2px;
+    border: none;
+    position: fixed;
+    top: 0%;
+    background: none;
+}
