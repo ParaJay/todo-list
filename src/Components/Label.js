@@ -24,8 +24,6 @@ const Label = (props) => {
 
     var wrapperStyle = props.colour;
 
-    // if(!wrapperStyle) wrapperStyle = props.colour === "dark" ? "#333" : "#fff";
-
     if(!props.isExpanded) {
         return (
             <div className={wrapperClassName} onClick={props.onClick} style={{"backgroundColor": wrapperStyle}} id={props.title}>
