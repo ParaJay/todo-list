@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import { getSubOrDefault, themes } from "../themes";
+import { convertCase } from "../utils";
 import Button from "./Button";
 
 const customStyles = {
@@ -9,8 +11,8 @@ const customStyles = {
         right: 'auto',
         bottom: 'auto',
         marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-    },
+        transform: 'translate(-50%, -50%)'
+    }
 };
 
 Modal.setAppElement('#root');
@@ -22,7 +24,7 @@ function Settings(props) {
     function afterVisible() {
     }
 
-    function dispose(callback) {
+    function dispose() {
         setIsVisible(false);
         props.onClose();
     }
@@ -35,8 +37,31 @@ function Settings(props) {
         setIsVisible(true);
     }
 
-    if(props.theme === "dark") {
-        customStyles.content.backgroundColor = "#333";
+    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "backgroundColor", "#fff");
+
+    const create = () => {
+        if(!props.settings) return <></>
+        let settings = props.settings;
+
+        let keys = Object.keys(settings);
+        let res = [];
+
+        keys.map(key => {
+            let setting = settings[key];
+            let type = setting.type;
+            let value = setting.value;
+            let text = setting.text;
+
+            if(type === "button") {
+                let button = <Button onClick={value} text={text ? text : convertCase(key, "camel", "space")} key={key}></Button>
+
+                    res.push(button);
+            } else if(key.toLowerCase().startsWith("separator")) {
+                res.push(<button className="invis" key={key}>____</button>)
+            }
+        });
+
+        return res;
     }
 
     return (
@@ -45,16 +70,12 @@ function Settings(props) {
         onAfterOpen={afterVisible}
         onRequestClose={() => dispose(props.closeCallback)}
         style={customStyles}
-        contentLabel="Existing Note"
+        contentLabel="Settings"
         >
-            <h2 className="centered-item themed" ref={(_subtitle) => (subtitle = _subtitle)}>Create Note</h2>
+            <h2 className="centered-item themed" ref={(_subtitle) => (subtitle = _subtitle)}>Settings</h2>
             <form onSubmit={(e) => onSubmit(e)} className="themed">
                 <div className="column-wrapper note-wrapper themed">
-                    <Button onClick={props.callbacks["showAll"]} text="Show All"></Button>
-                    <button className="invis">____</button>
-                    <Button onClick={props.callbacks["toggleBlock"]} text={"view: " + (props.block ? "block" : "row")} ></Button>
-
-                    <Button onClick={props.callbacks["toggleTheme"]} text={"theme: " + props.theme} ></Button>
+                    {create()}
                 </div>
             </form>
         </Modal>
