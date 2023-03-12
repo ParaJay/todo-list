@@ -66,7 +66,7 @@ const Notes = (props) => {
 
     if(curr.length > 0) sepWrapped.push(<div key={"c-w-x" } className="wrapper">{curr}</div>);
 
-    return <div className="overflow under-border">{unwrapped}{sepWrapped}</div>;
+    return <div className="overflow">{unwrapped}{sepWrapped}</div>;
 }
 
 export default Notes;
