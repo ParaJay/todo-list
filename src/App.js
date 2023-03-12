@@ -20,7 +20,7 @@ const App = () => {
     const [dialog, setDialogue] = useState(false);
     const [block, setBlock] = useState(false);
     const [search, setSearch] = useState("");
-    const [theme, setTheme] = useState(themes[0]);
+    const [theme, setTheme] = useState("");
     const [themeStyles] = useState({});
     const [isCreating, setIsCreating] = useState(false);
     const [isEditingSettings, setIsEditingSettings] = useState(false);
@@ -34,7 +34,7 @@ const App = () => {
 
     themes.map((e) => loadTheme(e));
 
-    for(let i = 1; i < themes.length; i++) {
+    for(let i = 0; i < themes.length; i++) {
         let theme = themes[i];
 
         if(themeStyles[theme]) { continue };
@@ -43,6 +43,10 @@ const App = () => {
             resolve(text);
         })).then((text) => {
             themeStyles[theme] = text;
+
+            if(i == themes.length - 1) {
+                setTheme("dark");
+            }
         })
     }
 
