@@ -39,7 +39,7 @@ function NoteDialog(props) {
         setIsVisible(true);
     }
 
-    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "backgroundColor", "#fff");
+    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "themed", "backgroundColor", "#fff");
 
     return (
         <Modal

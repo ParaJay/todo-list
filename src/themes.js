@@ -1,5 +1,24 @@
 export const themes = {};
+export const stylesheets = {};
 export var theme;
+var done, expected;
+var called;
+
+export const loadThemes = (themes, callback) => {
+    done = 0;
+    expected = themes.length;
+
+    for(let i = 0; i < themes.length; i++) {
+        let theme = themes[i];
+
+        if(themes[theme]) {
+            expected--;
+            continue;
+        }
+
+        loadTheme(theme, callback);
+    }
+}
 
 export const loadTheme = (theme, callback) => {
     if(themes[theme]) return;
@@ -8,6 +27,7 @@ export const loadTheme = (theme, callback) => {
             resolve(text);
         })).then((text) => {
             let split = text.split("}");
+            let fval = {};
 
             for(let i = 0; i < split.length; i++) {
                 let block = split[i];
@@ -15,13 +35,13 @@ export const loadTheme = (theme, callback) => {
                 let vars = block.split("{");
                 let key = vars[0].trim();
 
-                if(!key) continue;
+                if(!key) { done++; continue; }
 
                 if(!key.charAt(0).match("a-zA-Z")) key = key.slice(1);
 
                 let values = vars[1];
 
-                if(!values) continue;
+                if(!values) { done++; continue; }
                 
                 let valsplit = values.split(";");
                 let vals = {};
@@ -29,7 +49,7 @@ export const loadTheme = (theme, callback) => {
                 for(let j = 0; j < valsplit.length; j++) {
                     let val = valsplit[j];
 
-                    if(!val.trim()) continue;
+                    if(!val.trim()) { done++; continue; }
 
                     let kv = val.split(":");
                     let ky = kv[0].trim();
@@ -53,12 +73,21 @@ export const loadTheme = (theme, callback) => {
                     vals[ky] = v;
                 }
 
+                fval[key] = vals;
+                
+
                 if(themes[theme]) continue;
 
-                themes[theme] = vals;
+                stylesheets[theme] = text;
+
+                themes[theme] = fval;
+                done++;
             }
 
-            if(callback) callback();
+            if(done >= expected && callback && !called) {
+                called = true;
+                callback();
+            }
         })
 }
 
@@ -70,10 +99,10 @@ export const get = (key) => {
     return themes[key];
 }
 
-export const getSubOrDefault = (key, subkey, def) => {
-    let res = getSub(key, subkey);
+export const getSubOrDefault = (key, objkey, subkey, def) => {
+    let res = getSub(key, objkey);
 
-    return res ? res : def;
+    return res ? res[subkey] : def;
 }
 
 export const getSub = (key, subkey) => {

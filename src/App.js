@@ -7,7 +7,7 @@ import NoteDialog from "./Components/NoteDialog";
 import Notes from "./Components/Notes";
 import Panel from "./Components/Panel";
 import Settings from "./Components/Settings";
-import { loadTheme } from "./themes";
+import { stylesheets, loadThemes } from "./themes";
 import SettingsButton from "./Components/SettingsButton";
 import { images } from "./images";
 
@@ -21,7 +21,6 @@ const App = () => {
     const [block, setBlock] = useState(false);
     const [search, setSearch] = useState("");
     const [theme, setTheme] = useState("");
-    const [themeStyles] = useState({});
     const [isCreating, setIsCreating] = useState(false);
     const [isEditingSettings, setIsEditingSettings] = useState(false);
     const [view, setView] = useState(null);
@@ -31,24 +30,8 @@ const App = () => {
                             setIsEditingSettings={setIsEditingSettings} 
                             image = {images["settings"]}
                             ></SettingsButton>
-
-    themes.map((e) => loadTheme(e));
-
-    for(let i = 0; i < themes.length; i++) {
-        let theme = themes[i];
-
-        if(themeStyles[theme]) { continue };
-
-        new Promise((resolve) => fetch((require("./themes/" + theme + ".txt"))).then(r => r.text()).then(text => {
-            resolve(text);
-        })).then((text) => {
-            themeStyles[theme] = text;
-
-            if(i == themes.length - 1) {
-                setTheme("dark");
-            }
-        })
-    }
+                            
+    loadThemes(themes, () => setTheme("dark"));
 
     const colours = {};
 
@@ -198,7 +181,7 @@ const App = () => {
         var stylesheet = document.getElementById('themeStyle');
         if(stylesheet) stylesheet.parentNode.removeChild(stylesheet);
 
-        injectCss(themeStyles[theme]);
+        injectCss(stylesheets[theme]);
 
         document.body.classList.add("themed");
     }, [theme]);

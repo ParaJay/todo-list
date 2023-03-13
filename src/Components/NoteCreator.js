@@ -20,7 +20,7 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 const NoteCreator = (props) => {
-    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "backgroundColor", "#fff");
+    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "themed", "backgroundColor", "#fff");
 
     const onSubmit = (e) => {
         e.stopPropagation();
