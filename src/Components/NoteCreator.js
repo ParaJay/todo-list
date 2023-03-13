@@ -1,6 +1,6 @@
 import React from "react";
 import Modal from "react-modal";
-import { getSubOrDefault } from "../themes";
+import { getDec } from "../themes";
 import Button from "./Button";
 import Input from "./Input";
 import Panel from "./Panel";
@@ -20,7 +20,7 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 const NoteCreator = (props) => {
-    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "themed", "backgroundColor", "#fff");
+    customStyles.content["backgroundColor"] = getDec("themed", "backgroundColor", "#fff");
 
     const onSubmit = (e) => {
         e.stopPropagation();
@@ -51,7 +51,7 @@ const NoteCreator = (props) => {
                     {
                         "seperator1": ""
                     }
-                } theme={props.theme}></Settings>  
+                }></Settings>  
             )}
         />
     );

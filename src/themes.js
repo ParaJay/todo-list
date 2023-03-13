@@ -3,13 +3,63 @@ export const stylesheets = {};
 export var theme;
 var done, expected;
 var called;
+const ths = ["default", "dark"];
 
-export const loadThemes = (themes, callback) => {
+export const getTheme = () => {
+    return theme;
+}
+
+export const getStyling = () => {
+    return themes[theme];
+}
+
+export const getSelector = (key, def=undefined) => {
+    let data = getStyling();
+
+    return data ? data[key] : def;
+}
+
+export const getDec = (selector, key, def=undefined) => {
+    let sel = getSelector(selector);
+
+    return sel ? sel[key] : def;
+}
+
+export const applyTheme = (th, cb) => {
+    theme = th;
+    if(cb) cb(th);
+}
+
+export const toggleTheme = (cb) => {
+    let index = ths.indexOf(theme) + 1;
+
+    if(index == ths.length) index = 0;
+
+    applyTheme(ths[index], cb);
+    
+}
+
+export const injectTheme = () => {
+    console.log("injecting: " + theme);
+    console.log("injecting: " + stylesheets[theme]);
+    var stylesheet = document.getElementById('themeStyle');
+    if(stylesheet) stylesheet.parentNode.removeChild(stylesheet);
+
+    let styleSheet = document.createElement("style");
+    styleSheet.setAttribute("type", "text/css");
+    styleSheet.setAttribute("id", "themeStyle");
+    styleSheet.innerText = stylesheets[theme];
+    document.head.appendChild(styleSheet);
+
+    document.body.classList.add("themed");
+}
+
+export const load = (callback) => {
     done = 0;
-    expected = themes.length;
+    expected = ths.length;
 
-    for(let i = 0; i < themes.length; i++) {
-        let theme = themes[i];
+    for(let i = 0; i < ths.length; i++) {
+        let theme = ths[i];
 
         if(themes[theme]) {
             expected--;
@@ -82,39 +132,14 @@ export const loadTheme = (theme, callback) => {
 
                 themes[theme] = fval;
                 done++;
+                console.log("loaded: " + theme);
             }
 
             if(done >= expected && callback && !called) {
-                called = true;
-                callback();
+                if(!getTheme()) {
+                    called = true;
+                    applyTheme("dark", callback());
+                }
             }
         })
-}
-
-export const setTheme = (t) => {
-    theme = themes[t];
-}
-
-export const get = (key) => {
-    return themes[key];
-}
-
-export const getSubOrDefault = (key, objkey, subkey, def) => {
-    let res = getSub(key, objkey);
-
-    return res ? res[subkey] : def;
-}
-
-export const getSub = (key, subkey) => {
-    let theme = get(key);
-
-    return theme ? theme[subkey] : undefined;
-}
-
-export const set = (key, value) => {
-    theme[key] = value;
-}
-
-export const setSub = (key, subkey, value) => {
-    theme[key][subkey] = value;
 }

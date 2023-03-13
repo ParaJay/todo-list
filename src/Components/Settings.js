@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-import { get, getSubOrDefault, themes } from "../themes";
+import { getDec } from "../themes";
 import { convertCase } from "../utils";
 import Button from "./Button";
 
@@ -37,7 +37,7 @@ function Settings(props) {
         setIsVisible(true);
     }
 
-    customStyles.content["backgroundColor"] = getSubOrDefault(props.theme, "themed", "backgroundColor", "#fff");
+    customStyles.content["backgroundColor"] = getDec("themed", "backgroundColor", "#fff");
 
     const create = () => {
         if(!props.settings) return <></>
