@@ -7,32 +7,33 @@ import NoteDialog from "./Components/NoteDialog";
 import Notes from "./Components/Notes";
 import Panel from "./Components/Panel";
 import Settings from "./Components/Settings";
-import { stylesheets, loadThemes } from "./themes";
+import { toggleTheme, theme } from "./themes";
+import * as Themes from "./themes";
 import SettingsButton from "./Components/SettingsButton";
 import { images } from "./images";
 
 const App = () => {
-    const themes = ["default", "dark"];
-
     const [text, setText] = useState("");
     const [title, setTitle] = useState("");
     const [notes, setNotes] = useState([]);
     const [dialog, setDialogue] = useState(false);
     const [block, setBlock] = useState(false);
     const [search, setSearch] = useState("");
-    const [theme, setTheme] = useState("");
     const [isCreating, setIsCreating] = useState(false);
     const [isEditingSettings, setIsEditingSettings] = useState(false);
     const [view, setView] = useState(null);
+    const [o, forceUpdate] = useState(null);
+
+    const update = () => { forceUpdate(!o); }
+
+    Themes.load(() => update());
 
     const settingsButton = <SettingsButton
                             key="settings"
                             setIsEditingSettings={setIsEditingSettings} 
                             image = {images["settings"]}
                             ></SettingsButton>
-                            
-    loadThemes(themes, () => setTheme("dark"));
-
+                
     const colours = {};
 
     const onTitleChange = (e) => { setTitle(e.target.value); }
@@ -161,34 +162,13 @@ const App = () => {
         setBlock(!block);
     }
 
-    const toggleTheme = () => {
-        let index = themes.indexOf(theme) + 1;
-
-        if(index == themes.length) index = 0;
-
-        setTheme(themes[index]);
-    }
-
-    function injectCss(css) {
-        let styleSheet = document.createElement("style");
-        styleSheet.setAttribute("type", "text/css");
-        styleSheet.setAttribute("id", "themeStyle");
-        styleSheet.innerText = css;
-        document.head.appendChild(styleSheet);
-      }
-
     useEffect(() => {
-        var stylesheet = document.getElementById('themeStyle');
-        if(stylesheet) stylesheet.parentNode.removeChild(stylesheet);
-
-        injectCss(stylesheets[theme]);
-
-        document.body.classList.add("themed");
+        Themes.injectTheme();
     }, [theme]);
 
     if(dialog) return <NoteDialog isVisible={dialog} closeCallback={
         () => setDialogue(false)
-    } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote} theme={theme}/>;
+    } onOverwrite={() => {overwriteNote(); addNote();}} onMerge={mergeNote}/>;
 
     const nc_onSubmit = isCreating ? addNote : () => {overwriteNote(); addNote(); setView(null); };
 
@@ -202,7 +182,6 @@ const App = () => {
             onBack={() => view ? setView() : setIsCreating()} 
             onSettings={() => setIsEditingSettings(true)} 
             isEditingSettings={isEditingSettings}
-            theme={theme}
             images={images}
             settingsButton={settingsButton}
             text={view ? view.text : undefined}
@@ -269,7 +248,7 @@ const App = () => {
 
                             "toggleTheme": { 
                                 type: "button",
-                                "value": toggleTheme,
+                                "value": () => toggleTheme(forceUpdate),
                                 text: "theme: " + theme
                             },
 
@@ -278,7 +257,7 @@ const App = () => {
                                 "value": showAll
                             }
                         }
-                    } theme={theme} block={block}></Settings>
+                    } block={block}></Settings>
                 )}
             
                 footer = {
